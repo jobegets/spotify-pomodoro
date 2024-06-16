@@ -1,5 +1,5 @@
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-// import 'react-circular-progressbar/dist/styles.css';
+import 'react-circular-progressbar/dist/styles.css';
 import PlayButton from "./buttons/PlayButton.js"
 import PauseButton from "./buttons/PauseButton.js"
 import SettingsButton from "./buttons/SettingsButton.js"
@@ -97,7 +97,6 @@ function Timer() {
         value={percentage}
         text={minutes + ':' + seconds}
         styles={buildStyles({
-            textAlign:'center',
         textColor:'#fff',
         pathColor:mode === 'work' ? red : green,
         tailColor:'rgba(255,255,255,.2)',
