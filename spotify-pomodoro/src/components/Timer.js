@@ -1,13 +1,10 @@
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import PlayButton from "./buttons/PlayButton.js"
-import PauseButton from "./buttons/PauseButton.js"
-import SettingsButton from "./buttons/SettingsButton.js"
-import {useContext, useState, useEffect, useRef} from "react";
-import SettingsContext from "./SettingsContext";
-
-const red = '#f54e4e';
-const green = '#4aec8c';
+import PlayButton from "../buttons/PlayButton.js"
+import PauseButton from "../buttons/PauseButton.js"
+import SettingsButton from "../buttons/SettingsButton.js"
+import {useContext, useState, useEffect, useRef, memo} from "react";
+import SettingsContext from "../SettingsContext.js";
 
 function Timer() {
   const settingsInfo = useContext(SettingsContext);
@@ -25,6 +22,11 @@ function Timer() {
     secondsLeftRef.current--;
     setSecondsLeft(secondsLeftRef.current);
   }
+
+  useEffect(() => {
+    console.log(secondsLeft, '- Has changed')
+},[secondsLeft]) // <-- here put the parameter to listen, react will re-render component when your state will be changed
+
 
   useEffect(() => {
 
@@ -91,15 +93,15 @@ function Timer() {
   if(seconds < 10) seconds = '0'+seconds;
 
   return (
-    <div>
+    <div class = "w-1/5 min-w-max mt-28">
 
       <CircularProgressbar
         value={percentage}
         text={minutes + ':' + seconds}
         styles={buildStyles({
-        textColor:'#fff',
-        pathColor:mode === 'work' ? red : green,
-        tailColor:'rgba(255,255,255,.2)',
+        textColor:'#8a817c',
+        pathColor:mode === 'work' ? '#8a817c' : 'd6ccc2',
+        tailColor:'#8a817cf',
       })} />
       <div style={{marginTop:'20px'}}>
         {isPaused

@@ -45,7 +45,7 @@ const fetchPlaylistDetails = async (url, token) => {
         const name = data.name;
         const imageUrl = data.images.length > 0 ? data.images[0].url : null;
 
-        return { name, imageUrl };
+        return { name, imageUrl, url };
     } catch (error) {
         console.error(`Error fetching ${type} details:`, error);
         throw error;

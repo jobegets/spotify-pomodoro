@@ -1,14 +1,14 @@
 import ReactSlider from 'react-slider';
-import './slider.css'
-import SettingsContext from "./SettingsContext";
+import '../slider.css'
+import SettingsContext from "../SettingsContext";
 import {useContext} from "react";
-import BackButton from "./buttons/BackButton";
+import BackButton from "../buttons/BackButton";
 
 
 function Settings() {
   const settingsInfo = useContext(SettingsContext);
   return(
-    <div style={{textAlign:'left'}}>
+    <div class = 'text-left mt-48'>
       <label>work: {settingsInfo.workMinutes}:00</label>
       <ReactSlider
         className={'slider'}

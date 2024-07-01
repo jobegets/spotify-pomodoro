@@ -1,59 +1,58 @@
 import './App.css';
-import Timer from "./Timer";
-import Settings from "./Settings";
+import Timer from "./components/Timer";
+import Settings from "./components/Settings";
 import {useState} from "react";
 import SettingsContext from "./SettingsContext";
-import Spotify from './Spotify';
-import Login from './Login';
+import Spotify from './components/Spotify';
 import LoginButton from './components/LoginButton';
 import LogoutButton from './components/LogoutButton';
-import Profile from './components/Profile';
 import { useAuth0 } from '@auth0/auth0-react';
-import Select from 'react-select'
+import EmbedContext from './EmbedContext';
+import SpotifyEmbed from './components/SpotifyEmbed';
+import Header from './components/Header';
+import Login from './components/Login';
+import Gif from './components/Gif';
 
-  
 function App() {
-
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
-  
-
   const { isLoading, error, isAuthenticated } = useAuth0();
-
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [workMinutes, setWorkMinutes] = useState(45);
   const [shortBreakMinutes, setShortBreakMinutes] = useState(15);
   const [longBreakMinutes, setLongBreakMinutes] = useState(45);
-
+  const [embed, setEmbed] = useState("");
 
   return (
     <main>
       {isLoading && <div>Loading...</div>}
-      {! error && !isLoading && (
+      {!error && !isLoading && (
         <>
-          <LoginButton/>
-          <LogoutButton/>
-          <Profile/>
+          <Header> 
+            <LoginButton/> <LogoutButton/> 
+          </Header>
         </>
       )}
-
+      {!isAuthenticated &&  (<Gif/>)}
       {isAuthenticated && (
-        <div>
-
-        <Select options={options} />
-        <Spotify/>
-        <SettingsContext.Provider value={{
-          showSettings,setShowSettings,
-          workMinutes,setWorkMinutes,
-          shortBreakMinutes,setShortBreakMinutes,
-          longBreakMinutes,setLongBreakMinutes
-        }}>
-          {showSettings ? <Settings /> : <Timer />}
-        </SettingsContext.Provider>
-      </div>
+        <EmbedContext.Provider value = {{embed, setEmbed}}>
+          <div class = "flex flex-col gap-5 justify-center items-center">
+            <SettingsContext.Provider value={{
+              showSettings,setShowSettings,
+              workMinutes,setWorkMinutes,
+              shortBreakMinutes,setShortBreakMinutes,
+              longBreakMinutes,setLongBreakMinutes
+            }}>
+              {showSettings ? <Settings /> : <Timer />}
+            </SettingsContext.Provider>
+            <EmbedContext.Provider value = {{embed, setEmbed}}></EmbedContext.Provider>
+            <div style={{ display: showPlaylist ? 'block' : 'none' }}>
+                <Spotify/>
+                <button class="bg-black" onClick={() => setShowPlaylist(false)}> Close </button>
+              </div>
+{!showSettings && !showPlaylist ? <button onClick={() => setShowPlaylist(true)}>Change Playlist</button> : null}
+          </div>
+          <SpotifyEmbed/>
+        </EmbedContext.Provider>
       )}
     </main>
   );

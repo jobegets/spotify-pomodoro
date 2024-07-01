@@ -1,7 +1,9 @@
-    import React, { useState, useEffect } from 'react';
+    import React, { useState, useEffect, useContext } from 'react';
     import axios from 'axios'
     import { useAuth0 } from '@auth0/auth0-react';  
-    import {getSpotifyAccessToken, fetchPlaylistDetails} from './fetchPlaylistDetails';
+    import {getSpotifyAccessToken, fetchPlaylistDetails} from '../fetchPlaylistDetails';
+    import Select from 'react-select';
+    import EmbedContext from '../EmbedContext';
 
     function Spotify() {
         const [playlistLink, setPlaylistLink] = useState('');
@@ -9,7 +11,10 @@
         const [userPlaylist, setUserPlaylist] = useState([]);
         const [playlistDetails, setPlaylistDetails] = useState([]);
         const {getAccessTokenSilently, user} = useAuth0();
-        
+        const [options, setOptions] = useState([]);
+
+        const embedContext = useContext(EmbedContext);
+
         useEffect(() => {
             console.log("fetching playlists from ddb.....")
             // Fetch user's playlists from ddb
@@ -64,8 +69,12 @@
                         }
                     })
                 );
-    
+                // console.log("details", details);
+                console.log(userPlaylist)
                 setPlaylistDetails(details);
+                setOptions(details.map((detail) => ({ value: detail.url, label: detail.name })));
+    
+                
                 console.log(playlistDetails)
             };
     
@@ -114,38 +123,40 @@
 
         const embedPlaylist = (link) => {
             var embeddedLink = link.slice(0, 24) + "/embed/" + link.slice(24, link.length)
-            setPlaylistEmbed(embeddedLink)
+            embedContext.setEmbed(embeddedLink);
+            // setPlaylistEmbed(embeddedLink)
         }
 
         return (
             <div className="App">
                 <header className="App-header">
-                 
-                    <div>
-                        {userPlaylist}
-                    </div>
+                    <Select options={options} onChange = {(e) => {
+                        embedPlaylist(e.value)
+                    }}theme = {(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            primary25: 'slategrey',
+                            primary: 'black',
+                        },
+                        })} />
                     <div class=" justify-center align-center  flex-col">
                         <form class="max-w-md mx-auto p-5" onSubmit = {onSubmit} >   
                             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-main" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                     </svg>
                                 </div>
-                                <input type="search" id="default-search" value = {playlistLink} onChange = {(e) => {setPlaylistLink(e.target.value)}} class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Playlist Link..." required />
-                                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                                <input type="search" id="default-search" value = {playlistLink} onChange = {(e) => {setPlaylistLink(e.target.value)}} class="block w-full p-4 ps-10 text-sm text-main border border-gray-300 rounded-lg bg-gray-50 focus:ring-main focus:border-main dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-main0 dark:focus:border-main" placeholder="Playlist Link..." required />
+                                <button type="submit" class="text-main absolute end-2.5 bottom-2.5 bg-secondary hover:bg-main focus:ring-4 focus:outline-none focus:ring-main font-medium rounded-lg text-sm px-4 py-2 dark:bg-secondary 0 dark:hover:bg-secondary dark:focus:ring-main">Search</button>
                             </div>
                         </form>
-                        <iframe id= "spotify-embed" src= {playlistEmbed} width="340" height="200" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        
                     </div>
                     <div>
-                    {playlistDetails.map((detail, index) => (
-                        <div key={index}>
-                            <img src={detail.imageUrl} alt={detail.name} style={{ width: '100px', height: '100px' }} />
-                            <p>{detail.name}</p>
-                        </div>
-                    ))}
                 </div>
                 </header>
             </div>

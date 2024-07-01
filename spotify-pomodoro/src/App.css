@@ -4,22 +4,26 @@
 :root{
   --red: #f54e4e;
   --green: #4aec8c;
+
 }
 
+
+
 body{
-  background-color: #30384b;
-  color: #eee;
+  background-color: #f4f3ee;
+  color: #463f3a;
+  padding: 0;
+  background-repeat: no-repeat;
 }
 main{
-  padding-top: 50px;
-  max-width: 340px;
+  max-width: 100%;
   margin: 0 auto;
   text-align: center;
 }
 
 button{
   background-color: transparent;
-  color: rgba(255,255,255,0.8);
+  color: #463f3a;
   border:0;
   display: inline-block;
   width: 100px;
