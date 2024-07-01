@@ -6,6 +6,6 @@
 
 
 # To get started... 
-1.) Go to your favorite album / playlist 
-2.) Click the 3 dots -> share -> copy album / playlist link
-3.) Enter the link in the app and search!
+### 1.) Go to your favorite album / playlist 
+### 2.) Click the 3 dots -> share -> copy album / playlist link
+### 3.) Enter the link in the app and search!
